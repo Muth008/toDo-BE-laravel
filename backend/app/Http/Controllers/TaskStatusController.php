@@ -231,7 +231,11 @@ class TaskStatusController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
-        $this->taskStatusRepositoryInterface->delete($id);
+        $isDeleted = $this->taskStatusRepositoryInterface->delete($id);
+
+        if (!$isDeleted) {
+            return $this->sendError('Task priority not found.', 404);
+        }
 
         return $this->sendResponse(
             null,

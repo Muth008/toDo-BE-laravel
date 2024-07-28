@@ -159,4 +159,13 @@ class TaskStatusTest extends TestCase
                  ->assertJsonValidationErrors(['name', 'order']);
     }
 
+    public function test_cannot_delete_non_existent_task_status()
+    {
+        $nonExistentId = 9999;
+
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->token])
+                         ->deleteJson("/api/task-statuses/{$nonExistentId}");
+
+        $response->assertStatus(404);
+    }
 }

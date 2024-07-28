@@ -159,4 +159,13 @@ class TaskPriorityTest extends TestCase
                  ->assertJsonValidationErrors(['name', 'level']);
     }
 
+    public function test_cannot_delete_non_existent_task_priority()
+    {
+        $nonExistentId = 9999;
+
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->token])
+                         ->deleteJson("/api/task-priorities/{$nonExistentId}");
+
+        $response->assertStatus(404);
+    }
 }

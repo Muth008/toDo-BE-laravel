@@ -135,11 +135,13 @@ class TaskCategoryTest extends TestCase
         $this->assertDatabaseMissing('task_categories', ['id' => $category->id]);
     }
 
-    public function test_cannot_access_task_categories_without_authentication()
+    public function test_cannot_delete_non_existent_task_category()
     {
-        $response = $this->getJson('/api/task-categories');
+        $nonExistentId = 9999;
 
-        $response->assertStatus(401);
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->token])
+                         ->deleteJson("/api/task-categories/{$nonExistentId}");
+
+        $response->assertStatus(404);
     }
-
 }

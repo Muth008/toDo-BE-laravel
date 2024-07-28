@@ -237,4 +237,14 @@ class TaskTest extends TestCase
                      ]
                  ]);
     }
+
+    public function test_cannot_delete_non_existent_task()
+    {
+        $nonExistentTaskId = 9999;
+
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->token])
+                         ->deleteJson("/api/tasks/{$nonExistentTaskId}");
+
+        $response->assertStatus(404);
+    }
 }
