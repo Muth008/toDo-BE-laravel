@@ -1,8 +1,7 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\TaskStatus;
 
-use App\Models\User;
 use App\Models\TaskStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -18,13 +17,10 @@ class TaskStatusTest extends TestCase
     {
         parent::setUp();
 
-        // Create a user and get the token
-        $this->user = User::factory()->create();
-        $response = $this->postJson('/api/login', [
-            'email' => $this->user->email,
-            'password' => 'password',
-        ]);
-        $this->token = $response->json('data.token');
+        // Create an admin user and get the token
+        $loginData = $this->createUserAndGetLoginData('admin');
+        $this->token = $loginData['token'];
+        $this->user = $loginData['user'];
     }
 
     public function test_can_get_list_of_task_statuses()

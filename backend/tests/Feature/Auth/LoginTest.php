@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,7 +26,8 @@ class LoginTest extends TestCase
                  ->assertJsonStructure([
                      'success',
                      'data' => [
-                         'token'
+                         'token',
+                         'role'
                      ]
                  ]);
     }

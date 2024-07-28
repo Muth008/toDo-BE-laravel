@@ -6,7 +6,6 @@ use App\Http\Requests\Task\TaskIndexRequest;
 
 trait FilterableTask
 {
-
     /**
      * Get all filter parameters from request
      */

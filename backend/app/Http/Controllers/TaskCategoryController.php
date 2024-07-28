@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TaskCategoryRequest;
+use App\Http\Requests\TaskCategory\TaskCategoryCreateRequest;
+use App\Http\Requests\TaskCategory\TaskCategoryUpdateRequest;
 use App\Http\Resources\TaskCategoryResource;
 use App\Interfaces\TaskCategoryRepositoryInterface;
 use Illuminate\Http\JsonResponse;
@@ -60,15 +61,15 @@ class TaskCategoryController extends Controller
      *             }
      *         )
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized",
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized")
      * )
      */
     public function index(): JsonResponse
     {
-        $taskCategories = $this->taskCategoryRepositoryInterface->index();
+        // get only the task categories that belong to the authenticated user
+        $filters['user_id'] = auth()->id();
+
+        $taskCategories = $this->taskCategoryRepositoryInterface->index($filters);
 
         return $this->sendResponse(TaskCategoryResource::collection($taskCategories));
     }
@@ -81,24 +82,18 @@ class TaskCategoryController extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/TaskCategoryRequest")
+     *         @OA\JsonContent(ref="#/components/schemas/TaskCategoryCreateRequest")
      *     ),
      *     @OA\Response(
      *         response=201,
      *         description="Task category created successfully",
      *         @OA\JsonContent(ref="#/components/schemas/TaskCategoryApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized",
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=422, description="Validaion error")
      * )
      */
-    public function store(TaskCategoryRequest $request): JsonResponse
+    public function store(TaskCategoryCreateRequest $request): JsonResponse
     {
         $taskCategory = $this->taskCategoryRepositoryInterface->store($request->all());
 
@@ -126,22 +121,20 @@ class TaskCategoryController extends Controller
      *         description="Task category retrieved successfully",
      *         @OA\JsonContent(ref="#/components/schemas/TaskCategoryApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized",
-     *     ),
-     *    @OA\Response(
-     *        response=404,
-     *        description="Task category not found"
-     *   )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Task not found")
      * )
      */
     public function show(string $id): JsonResponse
     {
         $taskCategory = $this->taskCategoryRepositoryInterface->getById($id);
 
+        if ($taskCategory->user_id !== auth()->id()) {
+            return $this->sendError('Forbidden.', null, 403);
+        }
         if (!$taskCategory) {
-            return $this->sendError('Task category not found.', 404);
+            return $this->sendError('Task category not found.');
         }
 
         return $this->sendResponse(
@@ -164,37 +157,35 @@ class TaskCategoryController extends Controller
      *     ),
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/TaskCategoryRequest")
+     *         @OA\JsonContent(ref="#/components/schemas/TaskCategoryUpdateRequest")
      *     ),
      *     @OA\Response(
      *         response=201,
      *         description="Task category updated successfully",
      *         @OA\JsonContent(ref="#/components/schemas/TaskCategoryApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized",
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Task category not found"
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Task not found"),
+     *     @OA\Response(response=422, description="Validaion error")
      * )
      */
-    public function update(TaskCategoryRequest $request, string $id): JsonResponse
+    public function update(TaskCategoryUpdateRequest $request, string $id): JsonResponse
     {
-        $taskCategory = $this->taskCategoryRepositoryInterface->update($request->all(), $id);
+        $taskCategory = $this->taskCategoryRepositoryInterface->getById($id);
 
-        if (!$taskCategory) {
-            return $this->sendError('Task category not found.', 404);
+        if ($taskCategory->user_id !== auth()->id()) {
+            return $this->sendError('Forbidden.', null, 403);
+        }
+
+        $updatedTaskCategory = $this->taskCategoryRepositoryInterface->update($request->all(), $id);
+
+        if (!$updatedTaskCategory) {
+            return $this->sendError('Task category not found.');
         }
 
         return $this->sendResponse(
-            new TaskCategoryResource($taskCategory),
+            new TaskCategoryResource($updatedTaskCategory),
             'Task category updated successfully.',
             201
         );
@@ -217,22 +208,23 @@ class TaskCategoryController extends Controller
      *         description="Task category deleted successfully",
      *         @OA\JsonContent(ref="#/components/schemas/TaskApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized",
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Task category not found"
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Task not found")
      * )
      */
     public function destroy(string $id): JsonResponse
     {
+        $taskCategory = $this->taskCategoryRepositoryInterface->getById($id);
+
+        if ($taskCategory && $taskCategory->user_id !== auth()->id()) {
+            return $this->sendError('Forbidden.', null, 403);
+        }
+
         $isDeleted = $this->taskCategoryRepositoryInterface->delete($id);
 
         if (!$isDeleted) {
-            return $this->sendError('Task category not found.', 404);
+            return $this->sendError('Task category not found.');
         }
 
         return $this->sendResponse(

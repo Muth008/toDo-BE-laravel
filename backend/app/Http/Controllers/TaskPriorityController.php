@@ -62,10 +62,8 @@ class TaskPriorityController extends Controller
      *             }
      *         )
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized"
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden")
      * )
      */
     public function index(): JsonResponse
@@ -90,14 +88,9 @@ class TaskPriorityController extends Controller
      *         description="Task priority created successfully",
      *         @OA\JsonContent(ref="#/components/schemas/TaskPriorityApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized"
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=422, description="Validation error")
      * )
      */
     public function store(TaskPriorityRequest $request): JsonResponse
@@ -128,14 +121,9 @@ class TaskPriorityController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(ref="#/components/schemas/TaskPriorityApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized"
-     *     ),
-     *     @OA\Response(
-     *        response=404,
-     *        description="Task priority not found."
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Task status not found.")
      * )
      */
     public function show(string $id): JsonResponse
@@ -169,18 +157,10 @@ class TaskPriorityController extends Controller
      *         description="Task priority updated successfully",
      *         @OA\JsonContent(ref="#/components/schemas/TaskPriorityApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized"
-     *     ),
-     *     @OA\Response(
-     *        response=404,
-     *        description="Task priority not found."
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Task status not found."),
+     *     @OA\Response(response=422, description="Validation error")
      * )
      */
     public function update(TaskPriorityRequest $request, string $id): JsonResponse
@@ -188,7 +168,7 @@ class TaskPriorityController extends Controller
         $taskPriority = $this->taskPriorityRepositoryInterface->update($request->all(), $id);
 
         if (!$taskPriority) {
-            return $this->sendError('Task priority not found.', 404);
+            return $this->sendError('Task priority not found.');
         }
 
         return $this->sendResponse(
@@ -215,14 +195,9 @@ class TaskPriorityController extends Controller
      *         description="Task priority deleted successfully",
      *         @OA\JsonContent(ref="#/components/schemas/TaskApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized"
-     *     ),
-     *     @OA\Response(
-     *        response=404,
-     *        description="Task priority not found."
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Task priority not found."),
      * )
      */
     public function destroy(string $id): JsonResponse
@@ -230,7 +205,7 @@ class TaskPriorityController extends Controller
         $isDeleted = $this->taskPriorityRepositoryInterface->delete($id);
 
         if (!$isDeleted) {
-            return $this->sendError('Task priority not found.', 404);
+            return $this->sendError('Task priority not found.');
         }
 
         return $this->sendResponse(

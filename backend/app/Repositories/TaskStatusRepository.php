@@ -13,7 +13,7 @@ class TaskStatusRepository implements TaskStatusRepositoryInterface
         return TaskStatus::all();
     }
 
-    public function getById($id): TaskStatus
+    public function getById($id): TaskStatus | null
     {
        return TaskStatus::find($id);
     }
@@ -23,7 +23,7 @@ class TaskStatusRepository implements TaskStatusRepositoryInterface
        return TaskStatus::create($data);
     }
 
-    public function update(array $data,$id): TaskStatus
+    public function update(array $data,$id): TaskStatus | null
     {
        TaskStatus::whereId($id)->update($data);
 

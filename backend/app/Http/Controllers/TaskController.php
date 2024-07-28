@@ -76,30 +76,19 @@ class TaskController extends Controller
      *             }
      *         )
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized",
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized")
      * )
      */
     public function index(TaskIndexRequest $request): JsonResponse
     {
-        $perPage = $request->query('per_page', env('TASKS_PER_PAGE', 10));
-        $page = $request->query('page', 1);
         $filters = $this->getTasksFilters($request);
 
-        // Retrieve the tasks and the total count
-        $tasks = $this->taskRepositoryInterface->index($filters, $perPage, $page);
-        $totalTasks = $this->taskRepositoryInterface->count($filters);
-
-        // Calculate the total number of pages
-        $totalPages = ceil($totalTasks / $perPage);
-
-        return $this->sendResponse([
-            'tasks' => TaskResource::collection($tasks),
-            'total_tasks' => $totalTasks,
-            'total_pages' => $totalPages,
-        ]);
+        // get only the tasks that belong to the authenticated user
+        $filters['user_id'] = auth()->id();
+    
+        $paginationData = $this->getPaginationData($request, $filters);
+    
+        return $this->sendResponse($paginationData);
     }
 
     /**
@@ -110,21 +99,15 @@ class TaskController extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/TaskRequest")
+     *         @OA\JsonContent(ref="#/components/schemas/TaskCreateRequest")
      *     ),
      *     @OA\Response(
      *         response=201,
      *         description="Task created successfully",
      *         @OA\JsonContent(ref="#/components/schemas/TaskApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized",
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=422, description="Validation error")
      * )
      */
     public function store(TaskCreateRequest $request): JsonResponse
@@ -156,22 +139,20 @@ class TaskController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(ref="#/components/schemas/TaskApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized",
-     *     ),
-     *     @OA\Response(
-     *        response=404,
-     *        description="Task not found."
-     *    )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Task not found")
      * )
      */
     public function show(string $id): JsonResponse
     {
         $task = $this->taskRepositoryInterface->getById($id);
 
+        if ($task->category->user_id !== auth()->id()) {
+            return $this->sendError('Forbidden.', null, 403);
+        }
         if (!$task) {
-            return $this->sendError('Task not found.', 404);
+            return $this->sendError('Task not found.');
         }
 
         return $this->sendResponse(
@@ -195,37 +176,35 @@ class TaskController extends Controller
      *     ),
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/TaskRequest")
+     *         @OA\JsonContent(ref="#/components/schemas/TaskUpdateRequest")
      *     ),
      *     @OA\Response(
      *         response=201,
      *         description="Task updated successfully",
      *         @OA\JsonContent(ref="#/components/schemas/TaskApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized",
-     *     ),
-     *     @OA\Response(
-     *        response=404,
-     *        description="Task not found."
-     *    ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Task not found"),
+     *     @OA\Response(response=422, description="Validaion error")
      * )
      */
     public function update(TaskUpdateRequest $request, string $id): JsonResponse
-    {        
-        $task = $this->taskRepositoryInterface->update($request->all(), $id);
+    {   
+        $task = $this->taskRepositoryInterface->getById($id);
+        
+        if ($task->category->user_id !== auth()->id()) {
+            return $this->sendError('Forbidden.', null, 403);
+        }
 
-        if (!$task) {
-            return $this->sendError('Task not found.', 404);
+        $updatedTask = $this->taskRepositoryInterface->update($request->all(), $id);
+
+        if (!$updatedTask) {
+            return $this->sendError('Task not found.');
         }
 
         return $this->sendResponse(
-            new TaskResource($task),
+            new TaskResource($updatedTask),
             'Task updated successfully.',
             201
         );
@@ -249,22 +228,23 @@ class TaskController extends Controller
      *         description="Task deleted successfully",
      *         @OA\JsonContent(ref="#/components/schemas/TaskApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized",
-     *     ),
-     *     @OA\Response(
-     *        response=404,
-     *        description="Task not found."
-     *    )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Task not found")
      * )
      */
     public function destroy(string $id): JsonResponse
     {
+        $task = $this->taskRepositoryInterface->getById($id);
+
+        if ($task && $task->category->user_id !== auth()->id()) {
+            return $this->sendError('Forbidden.', null, 403);
+        }
+
         $isDeleted = $this->taskRepositoryInterface->delete($id);
 
         if (!$isDeleted) {
-            return $this->sendError('Task not found.', 404);
+            return $this->sendError('Task not found.');
         }
 
         return $this->sendResponse(
@@ -272,5 +252,21 @@ class TaskController extends Controller
             'Task deleted successfully.',
             204
         );
+    }
+
+    private function getPaginationData(TaskIndexRequest $request, array $filters): array
+{
+        $perPage = $request->query('per_page', env('TASKS_PER_PAGE', 10));
+        $page = $request->query('page', 1);
+
+        $tasks = $this->taskRepositoryInterface->index($filters, $perPage, $page);
+        $totalTasks = $this->taskRepositoryInterface->count($filters);
+        $totalPages = ceil($totalTasks / $perPage);
+
+        return [
+            'tasks' => TaskResource::collection($tasks),
+            'total_tasks' => $totalTasks,
+            'total_pages' => $totalPages,
+        ];
     }
 }

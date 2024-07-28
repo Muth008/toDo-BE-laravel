@@ -62,10 +62,8 @@ class TaskStatusController extends Controller
      *             }
      *         )
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized"
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden")
      * )
      */
     public function index(): JsonResponse
@@ -90,14 +88,9 @@ class TaskStatusController extends Controller
      *         description="Task status created successfully",
      *         @OA\JsonContent(ref="#/components/schemas/TaskStatusApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized"
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=422, description="Validation error")
      * )
      */
     public function store(TaskStatusRequest $request): JsonResponse
@@ -128,14 +121,9 @@ class TaskStatusController extends Controller
     *         description="Successful operation",
     *         @OA\JsonContent(ref="#/components/schemas/TaskStatusApiResponse")
     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized"
-     *     ),
-     *     @OA\Response(
-     *        response=404,
-     *        description="Task status not found."
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Task status not found."),
      * )
      */
     public function show(string $id): JsonResponse
@@ -143,7 +131,7 @@ class TaskStatusController extends Controller
         $taskStatus = $this->taskStatusRepositoryInterface->getById($id);
 
         if (!$taskStatus) {
-            return $this->sendError('Task status not found.', 404);
+            return $this->sendError('Task status not found.');
         }
 
         return $this->sendResponse(
@@ -173,18 +161,10 @@ class TaskStatusController extends Controller
      *         description="Task status updated successfully",
      *         @OA\JsonContent(ref="#/components/schemas/TaskStatusApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized"
-     *     ),
-     *     @OA\Response(
-     *        response=404,
-     *        description="Task status not found."
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Task status not found."),
+     *     @OA\Response(response=422, description="Validation error")
      * )
      */
     public function update(TaskStatusRequest $request, string $id): JsonResponse
@@ -192,7 +172,7 @@ class TaskStatusController extends Controller
         $taskStatus = $this->taskStatusRepositoryInterface->update($request->all(), $id);
 
         if (!$taskStatus) {
-            return $this->sendError('Task status not found.', 404);
+            return $this->sendError('Task status not found.');
         }
 
         return $this->sendResponse(
@@ -219,14 +199,9 @@ class TaskStatusController extends Controller
      *         description="Task status deleted successfully",
      *         @OA\JsonContent(ref="#/components/schemas/TaskApiResponse")
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized"
-     *     ),
-     *     @OA\Response(
-     *        response=404,
-     *        description="Task status not found."
-     *     )
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Task status not found."),
      * )
      */
     public function destroy(string $id): JsonResponse
@@ -234,7 +209,7 @@ class TaskStatusController extends Controller
         $isDeleted = $this->taskStatusRepositoryInterface->delete($id);
 
         if (!$isDeleted) {
-            return $this->sendError('Task priority not found.', 404);
+            return $this->sendError('Task priority not found.');
         }
 
         return $this->sendResponse(

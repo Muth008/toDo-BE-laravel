@@ -1,20 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\TaskCategory;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @OA\Schema(
- *     schema="TaskCategoryRequest",
- *     type="object",
- *     required={"user_id", "name"},
- *     @OA\Property(property="user_id", type="integer"),
- *     @OA\Property(property="name", type="string"),
- *     @OA\Property(property="description", type="string")
+ *     schema="TaskCategoryUpdateRequest",
+ *     allOf={
+ *         @OA\Schema(ref="#/components/schemas/TaskCategoryBase"),
+ *     }
  * )
  */
-class TaskCategoryRequest extends FormRequest
+class TaskCategoryUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,8 +30,7 @@ class TaskCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer|exists:users,id',
-            'name' => 'required|string|max:255',
+            'name' => 'string|max:255',
             'description' => 'string',
         ];
     }

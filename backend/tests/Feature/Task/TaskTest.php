@@ -1,9 +1,8 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Task;
 
 use App\Models\Task;
-use App\Models\User;
 use App\Models\TaskCategory;
 use App\Models\TaskPriority;
 use App\Models\TaskStatus;
@@ -22,12 +21,9 @@ class TaskTest extends TestCase
         parent::setUp();
 
         // Create a user and get the token
-        $this->user = User::factory()->create();
-        $response = $this->postJson('/api/login', [
-            'email' => $this->user->email,
-            'password' => 'password',
-        ]);
-        $this->token = $response->json('data.token');
+        $loginData = $this->createUserAndGetLoginData('user');
+        $this->token = $loginData['token'];
+        $this->user = $loginData['user'];
     }
 
     public function test_can_get_list_of_tasks()
@@ -246,5 +242,81 @@ class TaskTest extends TestCase
                          ->deleteJson("/api/tasks/{$nonExistentTaskId}");
 
         $response->assertStatus(404);
+    }
+
+    public function test_user_can_only_see_own_tasks()
+    {
+        $ownTaskData = $this->createUserTask();
+
+        $anotherUserData = $this->createSecondUserAndGetLoginData('user');
+        $otherTaskData = $this->createUserTask($anotherUserData['user']->id);
+
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $anotherUserData['token']])
+                        ->getJson('/api/tasks');
+
+        $response->assertStatus(200)
+                ->assertJsonFragment([
+                    'id' => $otherTaskData['task']->id,
+                    'category_id' => $otherTaskData['category']->id,
+                ])
+                ->assertJsonMissing([
+                    'id' => $ownTaskData['task']->id,
+                    'category_id' => $ownTaskData['category']->id,
+                ]);
+    }
+
+    public function test_user_cannot_see_other_users_task()
+    {
+        $otherTask = $this->createUserTask()['task'];
+
+        $anotherUserData = $this->createSecondUserAndGetLoginData('user');
+
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $anotherUserData['token']])
+                        ->getJson("/api/tasks/{$otherTask->id}");
+
+        $response->assertStatus(403);
+    }
+
+    public function test_user_cannot_update_other_users_task()
+    {
+        $otherTask = $this->createUserTask()['task'];
+
+        $anotherUserData = $this->createSecondUserAndGetLoginData('user');
+
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $anotherUserData['token']])
+                        ->putJson("/api/tasks/{$otherTask->id}", [
+                            'name' => 'Attempt to Update',
+                            'description' => 'This should not work'
+                        ]);
+
+        $response->assertStatus(403);
+    }
+
+    public function test_user_cannot_delete_other_users_task()
+    {
+        $otherTask = $this->createUserTask()['task'];
+
+        $anotherUserData = $this->createSecondUserAndGetLoginData('user');
+
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $anotherUserData['token']])
+                        ->deleteJson("/api/tasks/{$otherTask->id}");
+
+        $response->assertStatus(403);
+    }
+
+    private function createUserTask($userId = null)
+    {
+        $category = TaskCategory::factory()->create(['user_id' => $userId ?? $this->user->id]);
+        $status = TaskStatus::factory()->create();
+        $priority = TaskPriority::factory()->create();
+
+        return [
+            'category' => $category,
+            'task' => Task::factory()->create([
+                'category_id' => $category->id,
+                'status_id' => $status->id,
+                'priority_id' => $priority->id
+            ])
+        ];
     }
 }

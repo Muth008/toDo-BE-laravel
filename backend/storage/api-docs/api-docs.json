@@ -45,6 +45,10 @@
                                                         "token": {
                                                             "description": "Authentication token",
                                                             "type": "string"
+                                                        },
+                                                        "role": {
+                                                            "description": "User role",
+                                                            "type": "string"
                                                         }
                                                     },
                                                     "type": "object"
@@ -56,9 +60,6 @@
                                 }
                             }
                         }
-                    },
-                    "401": {
-                        "description": "Invalid credentials"
                     },
                     "422": {
                         "description": "Validation error"
@@ -146,20 +147,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
                     }
                 },
                 "security": [
@@ -179,7 +167,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/TaskCategoryRequest"
+                                "$ref": "#/components/schemas/TaskCategoryCreateRequest"
                             }
                         }
                     }
@@ -196,20 +184,10 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validaion error"
                     }
                 },
                 "security": [
@@ -248,20 +226,13 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Task not found"
                     }
                 },
                 "security": [
@@ -291,13 +262,13 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/TaskCategoryRequest"
+                                "$ref": "#/components/schemas/TaskCategoryUpdateRequest"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Task category updated successfully",
                         "content": {
                             "application/json": {
@@ -308,20 +279,16 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Task not found"
+                    },
+                    "422": {
+                        "description": "Validaion error"
                     }
                 },
                 "security": [
@@ -352,44 +319,19 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/ApiResponse"
-                                        },
-                                        {
-                                            "properties": {
-                                                "data": {
-                                                    "properties": {
-                                                        "message": {
-                                                            "description": "Task category deleted successfully",
-                                                            "type": "string"
-                                                        }
-                                                    },
-                                                    "type": "object"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/TaskApiResponse"
                                 }
                             }
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Task not found"
                     }
                 },
                 "security": [
@@ -473,20 +415,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
                     }
                 },
                 "security": [
@@ -506,7 +435,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/TaskRequest"
+                                "$ref": "#/components/schemas/TaskCreateRequest"
                             }
                         }
                     }
@@ -523,20 +452,10 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
                 },
                 "security": [
@@ -576,20 +495,13 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Task not found"
                     }
                 },
                 "security": [
@@ -620,7 +532,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/TaskRequest"
+                                "$ref": "#/components/schemas/TaskUpdateRequest"
                             }
                         }
                     }
@@ -637,20 +549,16 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Task not found"
+                    },
+                    "422": {
+                        "description": "Validaion error"
                     }
                 },
                 "security": [
@@ -688,20 +596,13 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Task not found"
                     }
                 },
                 "security": [
@@ -746,6 +647,9 @@
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "security": [
@@ -783,6 +687,12 @@
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
                 },
                 "security": [
@@ -822,6 +732,12 @@
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Task status not found."
                     }
                 },
                 "security": [
@@ -857,7 +773,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Task priority updated successfully",
                         "content": {
                             "application/json": {
@@ -869,6 +785,15 @@
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Task status not found."
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
                 },
                 "security": [
@@ -899,31 +824,19 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/ApiResponse"
-                                        },
-                                        {
-                                            "properties": {
-                                                "data": {
-                                                    "properties": {
-                                                        "message": {
-                                                            "description": "Task priority deleted successfully",
-                                                            "type": "string"
-                                                        }
-                                                    },
-                                                    "type": "object"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/TaskApiResponse"
                                 }
                             }
                         }
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Task priority not found."
                     }
                 },
                 "security": [
@@ -968,6 +881,9 @@
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "security": [
@@ -1005,6 +921,12 @@
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
                 },
                 "security": [
@@ -1044,6 +966,12 @@
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Task status not found."
                     }
                 },
                 "security": [
@@ -1079,7 +1007,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Task status updated successfully",
                         "content": {
                             "application/json": {
@@ -1091,6 +1019,15 @@
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Task status not found."
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
                 },
                 "security": [
@@ -1121,31 +1058,19 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/ApiResponse"
-                                        },
-                                        {
-                                            "properties": {
-                                                "data": {
-                                                    "properties": {
-                                                        "message": {
-                                                            "description": "Task status deleted successfully",
-                                                            "type": "string"
-                                                        }
-                                                    },
-                                                    "type": "object"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/TaskApiResponse"
                                 }
                             }
                         }
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Task status not found."
                     }
                 },
                 "security": [
@@ -1301,11 +1226,7 @@
                 },
                 "type": "object"
             },
-            "TaskRequest": {
-                "required": [
-                    "category_id",
-                    "name"
-                ],
+            "TaskBase": {
                 "properties": {
                     "category_id": {
                         "description": "ID of the task category",
@@ -1347,15 +1268,26 @@
                 },
                 "type": "object"
             },
-            "TaskCategoryRequest": {
+            "TaskCreateRequest": {
                 "required": [
-                    "user_id",
+                    "category_id",
                     "name"
                 ],
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/TaskBase"
+                    }
+                ]
+            },
+            "TaskUpdateRequest": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/TaskBase"
+                    }
+                ]
+            },
+            "TaskCategoryBase": {
                 "properties": {
-                    "user_id": {
-                        "type": "integer"
-                    },
                     "name": {
                         "type": "string"
                     },
@@ -1364,6 +1296,23 @@
                     }
                 },
                 "type": "object"
+            },
+            "TaskCategoryCreateRequest": {
+                "required": [
+                    "name"
+                ],
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/TaskCategoryBase"
+                    }
+                ]
+            },
+            "TaskCategoryUpdateRequest": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/TaskCategoryBase"
+                    }
+                ]
             },
             "TaskPriorityRequest": {
                 "required": [
@@ -1483,6 +1432,9 @@
                     "email": {
                         "type": "string",
                         "format": "email"
+                    },
+                    "role": {
+                        "type": "string"
                     }
                 },
                 "type": "object"

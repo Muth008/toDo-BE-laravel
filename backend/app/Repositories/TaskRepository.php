@@ -15,7 +15,7 @@ class TaskRepository implements TaskRepositoryInterface
         return $query->paginate($perPage, ['*'], 'page', $page);
     }
 
-    public function getById($id): Task
+    public function getById($id): Task | null
     {
         return Task::find($id);
     }
@@ -25,7 +25,7 @@ class TaskRepository implements TaskRepositoryInterface
         return Task::create($data);
     }
 
-    public function update(array $data, $id): Task
+    public function update(array $data, $id): Task | null
     {
         Task::whereId($id)->update($data);
 
@@ -46,12 +46,6 @@ class TaskRepository implements TaskRepositoryInterface
 
     private function applyFilters($query, array $filters = null)
     {
-        
-        // get only the tasks that belong to the authenticated user
-        $query->whereHas('category', function ($query) {
-            $query->where('user_id', auth()->id());
-        });
-
         if (isset($filters['name'])) {
             $query->where('name', 'like', '%' . $filters['name'] . '%');
         }
@@ -72,6 +66,12 @@ class TaskRepository implements TaskRepositoryInterface
         }
         if (isset($filters['due_date_to'])) {
             $query->where('due_date', '<=', $filters['due_date_to']);
+        }
+        if (isset($filters['user_id'])) {
+            $user_id = $filters['user_id'];
+            $query->whereHas('category', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            });
         }
 
         return $query;

@@ -37,7 +37,12 @@ class LoginUserController extends Controller
      *                                  property="token",
      *                                  type="string",
      *                                  description="Authentication token"
-     *                              )
+     *                              ),
+     *                             @OA\Property(
+     *                                 property="role",
+     *                                 type="string",
+     *                                 description="User role"
+     *                            )
      *                         )
      *                     }
      *                 )
@@ -61,7 +66,8 @@ class LoginUserController extends Controller
         $token = $request->user()->createToken('AUTH_TOKEN');
 
         return $this->sendResponse([
-            'token' => $token->plainTextToken
+            'token' => $token->plainTextToken,
+            'role' => $request->user()->role
         ]);
     }
 }

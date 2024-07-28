@@ -13,7 +13,7 @@ class TaskPriorityRepository implements TaskPriorityRepositoryInterface
         return TaskPriority::all();
     }
 
-    public function getById($id): TaskPriority
+    public function getById($id): TaskPriority | null
     {
        return TaskPriority::find($id);
     }
@@ -23,7 +23,7 @@ class TaskPriorityRepository implements TaskPriorityRepositoryInterface
        return TaskPriority::create($data);
     }
 
-    public function update(array $data,$id): TaskPriority
+    public function update(array $data,$id): TaskPriority | null
     {
         TaskPriority::whereId($id)->update($data);
 

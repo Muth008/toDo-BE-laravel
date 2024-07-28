@@ -1,8 +1,7 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\TaskCategory;
 
-use App\Models\User;
 use App\Models\TaskCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -19,12 +18,9 @@ class TaskCategoryTest extends TestCase
         parent::setUp();
 
         // Create a user and get the token
-        $this->user = User::factory()->create();
-        $response = $this->postJson('/api/login', [
-            'email' => $this->user->email,
-            'password' => 'password',
-        ]);
-        $this->token = $response->json('data.token');
+        $loginData = $this->createUserAndGetLoginData('user');
+        $this->token = $loginData['token'];
+        $this->user = $loginData['user'];
     }
 
     public function test_can_get_list_of_task_categories()
@@ -143,5 +139,65 @@ class TaskCategoryTest extends TestCase
                          ->deleteJson("/api/task-categories/{$nonExistentId}");
 
         $response->assertStatus(404);
+    }
+
+    public function test_user_can_only_see_own_task_categories()
+    {
+        $ownCategory = TaskCategory::factory()->create(['user_id' => $this->user->id]);
+
+        $anotherUserData = $this->createSecondUserAndGetLoginData('user');
+        $otherCategory = TaskCategory::factory()->create(['user_id' => $anotherUserData['user']->id]);
+
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $anotherUserData['token']])
+                         ->getJson('/api/task-categories');
+
+        $response->assertStatus(200)
+                 ->assertJsonFragment([
+                     'id' => $otherCategory->id,
+                     'user_id' => $anotherUserData['user']->id
+                 ])
+                 ->assertJsonMissing([
+                    'id' => $ownCategory->id,
+                    'user_id' => $this->user->id
+                ]);
+    }
+
+    public function test_user_cannot_see_other_users_task_category()
+    {
+        $otherCategory = TaskCategory::factory()->create(['user_id' => $this->user->id]);
+
+        $anotherUserData = $this->createSecondUserAndGetLoginData('user');
+
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $anotherUserData['token']])
+                         ->getJson("/api/task-categories/{$otherCategory->id}");
+
+        $response->assertStatus(403);
+    }
+
+    public function test_user_cannot_update_other_users_task_category()
+    {
+        $otherCategory = TaskCategory::factory()->create(['user_id' => $this->user->id]);
+
+        $anotherUserData = $this->createSecondUserAndGetLoginData('user');
+
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $anotherUserData['token']])
+                         ->putJson("/api/task-categories/{$otherCategory->id}", [
+                             'name' => 'Attempt to Update',
+                             'description' => 'This should not work'
+                         ]);
+
+        $response->assertStatus(403);
+    }
+
+    public function test_user_cannot_delete_other_users_task_category()
+    {
+        $otherCategory = TaskCategory::factory()->create(['user_id' => $this->user->id]);
+
+        $anotherUserData = $this->createSecondUserAndGetLoginData('user');
+
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $anotherUserData['token']])
+                         ->deleteJson("/api/task-categories/{$otherCategory->id}");
+
+        $response->assertStatus(403);
     }
 }
