@@ -1,0 +1,1611 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "ToDo API",
+        "description": "API Documentation for ToDo Application",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api"
+        }
+    ],
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login a user",
+                "operationId": "1d28f0e360f09426c1772f257d6c9997",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "properties": {
+                                                        "token": {
+                                                            "description": "Authentication token",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register a new user",
+                "operationId": "08efa9084e7163f12245032ff1fd6223",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/User"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/task-categories": {
+            "get": {
+                "tags": [
+                    "TaskCategories"
+                ],
+                "summary": "Get list of task categories",
+                "operationId": "53fffc44bfaf08594881d5fbe7a78c60",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/TaskCategory"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "TaskCategories"
+                ],
+                "summary": "Create a new task category",
+                "operationId": "a9b125abaf498341c76ee590985e0f36",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TaskCategoryRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Task category created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskCategoryApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/task-categories/{id}": {
+            "get": {
+                "tags": [
+                    "TaskCategories"
+                ],
+                "summary": "Get a task category by ID",
+                "operationId": "5161d65aebc8ac922e197ec9ae51d522",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task category retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskCategoryApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "TaskCategories"
+                ],
+                "summary": "Update a task category",
+                "operationId": "f4450b6819cfaa97109dc9c964d9fd4b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TaskCategoryRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Task category updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskCategoryApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "TaskCategories"
+                ],
+                "summary": "Delete a task category",
+                "operationId": "06927b8e1db4f93aa727676260a96f7f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Task category deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "properties": {
+                                                        "message": {
+                                                            "description": "Task category deleted successfully",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/tasks": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Get list of tasks",
+                "operationId": "6a93d54730cde509d735e538ab6800f6",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PerPage"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Name"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Description"
+                    },
+                    {
+                        "$ref": "#/components/parameters/CategoryId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PriorityId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/StatusId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/DueDateFrom"
+                    },
+                    {
+                        "$ref": "#/components/parameters/DueDateTo"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "properties": {
+                                                        "tasks": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "$ref": "#/components/schemas/Task"
+                                                            }
+                                                        },
+                                                        "total_tasks": {
+                                                            "type": "integer"
+                                                        },
+                                                        "total_pages": {
+                                                            "type": "integer"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Create a new task",
+                "operationId": "9b481c0ed5fdfa1a592d70ba39a348ee",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TaskRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Task created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/tasks/{id}": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Get a task by ID",
+                "operationId": "fd3677b5b24695d7b801715869b1357c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Task ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Update a task",
+                "operationId": "85377ff0e935f093dd75ea6886923dbc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Task ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TaskRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Task updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Delete a task",
+                "operationId": "5ed5dfd4c645e9398f4282969bfe6478",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Task ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Task deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/task-priorities": {
+            "get": {
+                "tags": [
+                    "TaskPriority"
+                ],
+                "summary": "Display a listing of the task priorities",
+                "operationId": "331c8e825913feeb5b4ebfb1bc54741f",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/TaskPriority"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "TaskPriority"
+                ],
+                "summary": "Store a newly created task priority",
+                "operationId": "49c452fb101fd8e7b54b73b9b561752f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TaskPriorityRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Task priority created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskPriorityApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/task-priorities/{id}": {
+            "get": {
+                "tags": [
+                    "TaskPriority"
+                ],
+                "summary": "Display the specified task priority",
+                "operationId": "0aa9c3e3b1f4790dcebac8a8f70f082e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskPriorityApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "TaskPriority"
+                ],
+                "summary": "Update the specified task priority",
+                "operationId": "25048341e5e61d2cac87dc1960e622f7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TaskPriorityRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Task priority updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskPriorityApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "TaskPriority"
+                ],
+                "summary": "Remove the specified task priority",
+                "operationId": "49c491ac7c3d480322a844da6c356a9d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Task priority deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "properties": {
+                                                        "message": {
+                                                            "description": "Task priority deleted successfully",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/task-statuses": {
+            "get": {
+                "tags": [
+                    "TaskStatus"
+                ],
+                "summary": "Display a listing of the task statuses",
+                "operationId": "5d152b1873daba6ba26dab02a48b40ba",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/TaskStatus"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "TaskStatus"
+                ],
+                "summary": "Store a newly created task status",
+                "operationId": "b2270e81a654fbb999657420e05264f8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TaskStatusRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Task status created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskStatusApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/task-statuses/{id}": {
+            "get": {
+                "tags": [
+                    "TaskStatus"
+                ],
+                "summary": "Display the specified task status",
+                "operationId": "87413044744664bdc385831d4216f99a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskStatusApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "TaskStatus"
+                ],
+                "summary": "Update the specified task status",
+                "operationId": "dab33cc3b97f71ee2b858fa0db2e2dd2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TaskStatusRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Task status updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskStatusApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "TaskStatus"
+                ],
+                "summary": "Remove the specified task status",
+                "operationId": "70ae5d283c1888f9c773d86b53d8f727",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Task status deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "properties": {
+                                                        "message": {
+                                                            "description": "Task status deleted successfully",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ApiResponse": {
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "data": {
+                        "type": "object"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TaskCategoryApiResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "properties": {
+                                    "": {
+                                        "$ref": "#/components/schemas/TaskCategory"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "TaskApiResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "properties": {
+                                    "": {
+                                        "$ref": "#/components/schemas/Task"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "TaskPriorityApiResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "properties": {
+                                    "": {
+                                        "$ref": "#/components/schemas/TaskPriority"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "TaskStatusApiResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "properties": {
+                                    "": {
+                                        "$ref": "#/components/schemas/TaskStatus"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "LoginRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "User email address",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "description": "User password",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "User's name",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "User's email address",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "description": "User's password",
+                        "type": "string"
+                    },
+                    "password_confirmation": {
+                        "description": "Password confirmation",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TaskRequest": {
+                "required": [
+                    "category_id",
+                    "name"
+                ],
+                "properties": {
+                    "category_id": {
+                        "description": "ID of the task category",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "status_id": {
+                        "description": "ID of the task status",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "priority_id": {
+                        "description": "ID of the task priority",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "Name of the task",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Task Name"
+                    },
+                    "description": {
+                        "description": "Description of the task",
+                        "type": "string",
+                        "example": "Task Description"
+                    },
+                    "text": {
+                        "description": "Detailed text of the task",
+                        "type": "string",
+                        "example": "Detailed Task Text"
+                    },
+                    "due_date": {
+                        "description": "Due date of the task",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-12-31"
+                    }
+                },
+                "type": "object"
+            },
+            "TaskCategoryRequest": {
+                "required": [
+                    "user_id",
+                    "name"
+                ],
+                "properties": {
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TaskPriorityRequest": {
+                "required": [
+                    "name",
+                    "level"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "level": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "TaskStatusRequest": {
+                "required": [
+                    "name",
+                    "order"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "order": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "TaskCategory": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TaskPriority": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "level": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "Task": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "category_id": {
+                        "type": "integer"
+                    },
+                    "status_id": {
+                        "type": "integer"
+                    },
+                    "priority_id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "due_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "TaskStatus": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "order": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "parameters": {
+            "PerPage": {
+                "name": "per_page",
+                "in": "query",
+                "description": "Number of tasks per page",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "maximum": 100,
+                    "minimum": 1
+                }
+            },
+            "Page": {
+                "name": "page",
+                "in": "query",
+                "description": "Page number for pagination",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "minimum": 1
+                }
+            },
+            "Name": {
+                "name": "name",
+                "in": "query",
+                "description": "Name of the task",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "Description": {
+                "name": "description",
+                "in": "query",
+                "description": "Description of the task",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "maxLength": 255
+                }
+            },
+            "CategoryId": {
+                "name": "category_id",
+                "in": "query",
+                "description": "ID of the task category",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "PriorityId": {
+                "name": "priority_id",
+                "in": "query",
+                "description": "ID of the task priority",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "StatusId": {
+                "name": "status_id",
+                "in": "query",
+                "description": "ID of the task status",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "DueDateFrom": {
+                "name": "due_date_from",
+                "in": "query",
+                "description": "Filter tasks with due date from",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "format": "date"
+                }
+            },
+            "DueDateTo": {
+                "name": "due_date_to",
+                "in": "query",
+                "description": "Filter tasks with due date to",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "format": "date"
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Use a Bearer token to authorize requests",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Endpoints for user authentication"
+        },
+        {
+            "name": "TaskCategories",
+            "description": "TaskCategories"
+        },
+        {
+            "name": "Tasks",
+            "description": "Tasks"
+        },
+        {
+            "name": "TaskPriority",
+            "description": "TaskPriority"
+        },
+        {
+            "name": "TaskStatus",
+            "description": "TaskStatus"
+        }
+    ]
+}
