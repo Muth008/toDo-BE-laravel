@@ -1,6 +1,6 @@
 # ToDo Application
 
-Welcome to the ToDo application! This project is a simple base application designed to manage tasks, inside categories, with dfined priorities, statuses, and due dates. It consists of a backend Laravel application and a MySQL database.
+Welcome to the ToDo application! This project is a simple basic task management application, inside categories, with defined priorities, statuses, and due dates. It consists of a backend Laravel application and a MySQL database.
 
 ## Overview
 
