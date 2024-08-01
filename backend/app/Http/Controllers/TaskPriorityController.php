@@ -9,25 +9,23 @@ use Illuminate\Http\JsonResponse;
 
 /**
  * @OA\Tag(
- *     name="TaskPriorities",
- *     description="API Endpoints of Task Priorities"
- * )
- */
-/**
- *  @OA\Schema(
- *     schema="TaskPriorityApiResponse",
- *     type="object",
- *     allOf={
- *         @OA\Schema(ref="#/components/schemas/ApiResponse"),
- *         @OA\Schema(
- *             properties={
- *                 @OA\Property(
- *                      property="data", type="object",
- *                      @OA\Property(ref="#/components/schemas/TaskPriority")
- *                 )
- *             }
- *         )
- *     }
+ *     name="TaskPriority",
+ *     description="API Endpoints of Task Priorities - for admin users only"
+ * ),
+ * @OA\Schema(
+ *    schema="TaskPriorityApiResponse",
+ *    type="object",
+ *    allOf={
+ *        @OA\Schema(ref="#/components/schemas/ApiResponse"),
+ *        @OA\Schema(
+ *            properties={
+ *                @OA\Property(
+ *                     property="data", type="object",
+ *                     @OA\Property(ref="#/components/schemas/TaskPriority")
+ *                )
+ *            }
+ *        )
+ *    }
  * )
  */
 class TaskPriorityController extends Controller

@@ -42,7 +42,7 @@ class TaskCategoryController extends Controller
      * @OA\Get(
      *     path="/task-categories",
      *     summary="Get list of task categories",
-     *     tags={"TaskCategories"},
+     *     tags={"TaskCategory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
@@ -78,7 +78,7 @@ class TaskCategoryController extends Controller
      * @OA\Post(
      *     path="/task-categories",
      *     summary="Create a new task category",
-     *     tags={"TaskCategories"},
+     *     tags={"TaskCategory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
@@ -108,7 +108,7 @@ class TaskCategoryController extends Controller
      * @OA\Get(
      *     path="/task-categories/{id}",
      *     summary="Get a task category by ID",
-     *     tags={"TaskCategories"},
+     *     tags={"TaskCategory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
@@ -147,7 +147,7 @@ class TaskCategoryController extends Controller
      * @OA\Put(
      *     path="/task-categories/{id}",
      *     summary="Update a task category",
-     *     tags={"TaskCategories"},
+     *     tags={"TaskCategory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
@@ -195,7 +195,7 @@ class TaskCategoryController extends Controller
      * @OA\Delete(
      *     path="/task-categories/{id}",
      *     summary="Delete a task category",
-     *     tags={"TaskCategories"},
+     *     tags={"TaskCategory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",

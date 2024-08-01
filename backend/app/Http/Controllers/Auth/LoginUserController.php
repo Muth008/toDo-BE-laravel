@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 /**
  * @OA\Tag(
  *      name="Authentication",
- *      description="Endpoints for user authentication"
+ *      description="API Endpoints for user authentication"
  * )
  */
 class LoginUserController extends Controller

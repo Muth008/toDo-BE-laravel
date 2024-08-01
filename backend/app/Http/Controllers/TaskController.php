@@ -14,23 +14,21 @@ use Illuminate\Http\JsonResponse;
  * @OA\Tag(
  *     name="Task",
  *     description="API Endpoints of Tasks"
- * )
- */
-/**
- *  @OA\Schema(
- *     schema="TaskApiResponse",
- *     type="object",
- *     allOf={
- *         @OA\Schema(ref="#/components/schemas/ApiResponse"),
- *         @OA\Schema(
- *             properties={
- *                 @OA\Property(
- *                      property="data", type="object",
- *                      @OA\Property(ref="#/components/schemas/Task")
- *                 )
- *             }
- *         )
- *     }
+ * ),
+ * @OA\Schema(
+ *    schema="TaskApiResponse",
+ *    type="object",
+ *    allOf={
+ *        @OA\Schema(ref="#/components/schemas/ApiResponse"),
+ *        @OA\Schema(
+ *            properties={
+ *                @OA\Property(
+ *                     property="data", type="object",
+ *                     @OA\Property(ref="#/components/schemas/Task")
+ *                )
+ *            }
+ *        )
+ *    }
  * )
  */
 class TaskController extends Controller
@@ -48,7 +46,7 @@ class TaskController extends Controller
      * @OA\Get(
      *     path="/tasks",
      *     summary="Get list of tasks",
-     *     tags={"Tasks"},
+     *     tags={"Task"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(ref="#/components/parameters/PerPage"),
      *     @OA\Parameter(ref="#/components/parameters/Page"),
@@ -95,7 +93,7 @@ class TaskController extends Controller
      * @OA\Post(
      *     path="/tasks",
      *     summary="Create a new task",
-     *     tags={"Tasks"},
+     *     tags={"Task"},
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
@@ -125,7 +123,7 @@ class TaskController extends Controller
      * @OA\Get(
      *     path="/tasks/{id}",
      *     summary="Get a task by ID",
-     *     tags={"Tasks"},
+     *     tags={"Task"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
@@ -165,7 +163,7 @@ class TaskController extends Controller
      * @OA\Put(
      *     path="/tasks/{id}",
      *     summary="Update a task",
-     *     tags={"Tasks"},
+     *     tags={"Task"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
@@ -214,7 +212,7 @@ class TaskController extends Controller
      * @OA\Delete(
      *     path="/tasks/{id}",
      *     summary="Delete a task",
-     *     tags={"Tasks"},
+     *     tags={"Task"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",

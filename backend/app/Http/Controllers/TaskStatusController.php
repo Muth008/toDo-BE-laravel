@@ -9,25 +9,23 @@ use Illuminate\Http\JsonResponse;
 
 /**
  * @OA\Tag(
- *     name="TaskStatuses",
- *     description="API Endpoints of Task Statuses"
- * )
- */
-/**
- *  @OA\Schema(
- *     schema="TaskStatusApiResponse",
- *     type="object",
- *     allOf={
- *         @OA\Schema(ref="#/components/schemas/ApiResponse"),
- *         @OA\Schema(
- *             properties={
- *                 @OA\Property(
- *                      property="data", type="object",
- *                      @OA\Property(ref="#/components/schemas/TaskStatus")
- *                 )
- *             }
- *         )
- *     }
+ *      name="TaskStatus",
+ *      description="API Endpoints of Task Statuses - for admin users only"
+ * ),
+ * @OA\Schema(
+ *    schema="TaskStatusApiResponse",
+ *    type="object",
+ *    allOf={
+ *        @OA\Schema(ref="#/components/schemas/ApiResponse"),
+ *        @OA\Schema(
+ *            properties={
+ *                @OA\Property(
+ *                     property="data", type="object",
+ *                     @OA\Property(ref="#/components/schemas/TaskStatus")
+ *                )
+ *            }
+ *        )
+ *    }
  * )
  */
 class TaskStatusController extends Controller

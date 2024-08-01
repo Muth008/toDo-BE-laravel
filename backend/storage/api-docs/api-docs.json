@@ -116,7 +116,7 @@
         "/task-categories": {
             "get": {
                 "tags": [
-                    "TaskCategories"
+                    "TaskCategory"
                 ],
                 "summary": "Get list of task categories",
                 "operationId": "53fffc44bfaf08594881d5fbe7a78c60",
@@ -158,7 +158,7 @@
             },
             "post": {
                 "tags": [
-                    "TaskCategories"
+                    "TaskCategory"
                 ],
                 "summary": "Create a new task category",
                 "operationId": "a9b125abaf498341c76ee590985e0f36",
@@ -200,7 +200,7 @@
         "/task-categories/{id}": {
             "get": {
                 "tags": [
-                    "TaskCategories"
+                    "TaskCategory"
                 ],
                 "summary": "Get a task category by ID",
                 "operationId": "5161d65aebc8ac922e197ec9ae51d522",
@@ -243,7 +243,7 @@
             },
             "put": {
                 "tags": [
-                    "TaskCategories"
+                    "TaskCategory"
                 ],
                 "summary": "Update a task category",
                 "operationId": "f4450b6819cfaa97109dc9c964d9fd4b",
@@ -299,7 +299,7 @@
             },
             "delete": {
                 "tags": [
-                    "TaskCategories"
+                    "TaskCategory"
                 ],
                 "summary": "Delete a task category",
                 "operationId": "06927b8e1db4f93aa727676260a96f7f",
@@ -344,7 +344,7 @@
         "/tasks": {
             "get": {
                 "tags": [
-                    "Tasks"
+                    "Task"
                 ],
                 "summary": "Get list of tasks",
                 "operationId": "6a93d54730cde509d735e538ab6800f6",
@@ -426,7 +426,7 @@
             },
             "post": {
                 "tags": [
-                    "Tasks"
+                    "Task"
                 ],
                 "summary": "Create a new task",
                 "operationId": "9b481c0ed5fdfa1a592d70ba39a348ee",
@@ -468,7 +468,7 @@
         "/tasks/{id}": {
             "get": {
                 "tags": [
-                    "Tasks"
+                    "Task"
                 ],
                 "summary": "Get a task by ID",
                 "operationId": "fd3677b5b24695d7b801715869b1357c",
@@ -512,7 +512,7 @@
             },
             "put": {
                 "tags": [
-                    "Tasks"
+                    "Task"
                 ],
                 "summary": "Update a task",
                 "operationId": "85377ff0e935f093dd75ea6886923dbc",
@@ -569,7 +569,7 @@
             },
             "delete": {
                 "tags": [
-                    "Tasks"
+                    "Task"
                 ],
                 "summary": "Delete a task",
                 "operationId": "5ed5dfd4c645e9398f4282969bfe6478",
@@ -1541,23 +1541,23 @@
     "tags": [
         {
             "name": "Authentication",
-            "description": "Endpoints for user authentication"
+            "description": "API Endpoints for user authentication"
         },
         {
-            "name": "TaskCategories",
-            "description": "TaskCategories"
+            "name": "TaskCategory",
+            "description": "API Endpoints of Task Categories"
         },
         {
-            "name": "Tasks",
-            "description": "Tasks"
+            "name": "Task",
+            "description": "API Endpoints of Tasks"
         },
         {
             "name": "TaskPriority",
-            "description": "TaskPriority"
+            "description": "API Endpoints of Task Priorities - for admin users only"
         },
         {
             "name": "TaskStatus",
-            "description": "TaskStatus"
+            "description": "API Endpoints of Task Statuses - for admin users only"
         }
     ]
 }
