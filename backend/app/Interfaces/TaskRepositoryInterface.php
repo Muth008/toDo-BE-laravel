@@ -8,6 +8,6 @@ interface TaskRepositoryInterface extends ApiRepositoryInterface
     public function count(array $filters): int;
     public function getById($id);
     public function store(array $data);
-    public function update(array $data,$id);
+    public function update(array $data, $id);
     public function delete($id);
 }

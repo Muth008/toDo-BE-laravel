@@ -62,7 +62,7 @@ class TaskPriorityTest extends TestCase
                          'level'
                      ]
                  ]);
-        
+
         $this->assertDatabaseHas('task_priorities', ['name' => 'High Priority', 'level' => 3]);
     }
 

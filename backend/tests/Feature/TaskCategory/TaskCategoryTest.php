@@ -65,7 +65,7 @@ class TaskCategoryTest extends TestCase
                          'description'
                      ],
                  ]);
-        
+
         $this->assertDatabaseHas('task_categories', ['name' => 'Test Category']);
     }
 

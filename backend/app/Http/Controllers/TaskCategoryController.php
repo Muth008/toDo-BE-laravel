@@ -234,4 +234,3 @@ class TaskCategoryController extends Controller
         );
     }
 }
-

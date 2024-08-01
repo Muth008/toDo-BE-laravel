@@ -25,13 +25,13 @@ class TaskCategoryRepository implements TaskCategoryRepositoryInterface
         return TaskCategory::create($data);
     }
 
-    public function update(array $data,$id): TaskCategory | null
+    public function update(array $data, $id): TaskCategory | null
     {
         TaskCategory::whereId($id)->update($data);
 
         return TaskCategory::find($id);
     }
-    
+
     public function delete($id): bool
     {
         return TaskCategory::destroy($id);

@@ -15,21 +15,21 @@ class TaskStatusRepository implements TaskStatusRepositoryInterface
 
     public function getById($id): TaskStatus | null
     {
-       return TaskStatus::find($id);
+        return TaskStatus::find($id);
     }
 
     public function store(array $data): TaskStatus
     {
-       return TaskStatus::create($data);
+        return TaskStatus::create($data);
     }
 
-    public function update(array $data,$id): TaskStatus | null
+    public function update(array $data, $id): TaskStatus | null
     {
-       TaskStatus::whereId($id)->update($data);
+        TaskStatus::whereId($id)->update($data);
 
-       return TaskStatus::find($id);
+        return TaskStatus::find($id);
     }
-    
+
     public function delete($id): bool
     {
         return TaskStatus::destroy($id);

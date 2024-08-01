@@ -215,4 +215,3 @@ class TaskPriorityController extends Controller
         );
     }
 }
-

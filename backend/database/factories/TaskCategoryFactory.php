@@ -12,14 +12,14 @@ class TaskCategoryFactory extends Factory
      * The name of the factory's corresponding model.
      *
      * @var string
-     */    
+     */
     protected $model = TaskCategory::class;
 
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
-     */    
+     */
     public function definition(): array
     {
         // Get the first user

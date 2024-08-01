@@ -97,7 +97,7 @@ class TaskTest extends TestCase
                      ],
                      'message'
                  ]);
-        
+
         $this->assertDatabaseHas('tasks', ['name' => 'Test Task']);
     }
 

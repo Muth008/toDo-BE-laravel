@@ -38,7 +38,7 @@ class TaskController extends Controller
     use FilterableTask;
 
     private TaskRepositoryInterface $taskRepositoryInterface;
-    
+
     public function __construct(TaskRepositoryInterface $taskRepositoryInterface)
     {
         $this->taskRepositoryInterface = $taskRepositoryInterface;
@@ -85,9 +85,9 @@ class TaskController extends Controller
 
         // get only the tasks that belong to the authenticated user
         $filters['user_id'] = auth()->id();
-    
+
         $paginationData = $this->getPaginationData($request, $filters);
-    
+
         return $this->sendResponse($paginationData);
     }
 
@@ -190,9 +190,9 @@ class TaskController extends Controller
      * )
      */
     public function update(TaskUpdateRequest $request, string $id): JsonResponse
-    {   
+    {
         $task = $this->taskRepositoryInterface->getById($id);
-        
+
         if ($task->category->user_id !== auth()->id()) {
             return $this->sendError('Forbidden.', null, 403);
         }
@@ -255,7 +255,7 @@ class TaskController extends Controller
     }
 
     private function getPaginationData(TaskIndexRequest $request, array $filters): array
-{
+    {
         $perPage = $request->query('per_page', env('TASKS_PER_PAGE', 10));
         $page = $request->query('page', 1);
 

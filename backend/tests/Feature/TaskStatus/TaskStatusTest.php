@@ -62,7 +62,7 @@ class TaskStatusTest extends TestCase
                          'order'
                      ]
                  ]);
-        
+
         $this->assertDatabaseHas('task_statuses', ['name' => 'In Progress', 'order' => 2]);
     }
 

@@ -15,21 +15,21 @@ class TaskPriorityRepository implements TaskPriorityRepositoryInterface
 
     public function getById($id): TaskPriority | null
     {
-       return TaskPriority::find($id);
+        return TaskPriority::find($id);
     }
 
     public function store(array $data): TaskPriority
     {
-       return TaskPriority::create($data);
+        return TaskPriority::create($data);
     }
 
-    public function update(array $data,$id): TaskPriority | null
+    public function update(array $data, $id): TaskPriority | null
     {
         TaskPriority::whereId($id)->update($data);
 
-       return TaskPriority::find($id);
+        return TaskPriority::find($id);
     }
-    
+
     public function delete($id): bool
     {
         return TaskPriority::destroy($id);
