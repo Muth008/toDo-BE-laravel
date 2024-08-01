@@ -3,6 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\Task;
+use App\Models\TaskCategory;
+use App\Models\TaskPriority;
+use App\Models\TaskStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TaskFactory extends Factory
@@ -21,10 +24,14 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
+        $categories = TaskCategory::all();
+        $statuses = TaskStatus::all();
+        $priorities = TaskPriority::all();
+
         return [
-            'category_id' => $this->faker->numberBetween(1, 2),
-            'status_id' => $this->faker->numberBetween(1, 3),
-            'priority_id' => $this->faker->numberBetween(1, 3),
+            'category_id' => $categories->random()->id,
+            'status_id' => $statuses->random()->id,
+            'priority_id' => $priorities->random()->id,
             'name' => $this->faker->sentence,
             'description' => $this->faker->sentence,
             'text' => $this->faker->text,

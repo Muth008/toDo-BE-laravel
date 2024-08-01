@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\TaskCategory;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TaskCategoryFactory extends Factory
@@ -21,8 +22,11 @@ class TaskCategoryFactory extends Factory
      */    
     public function definition(): array
     {
+        // Get the first user
+        $firstUser = User::first();
+
         return [
-            'user_id' => 1,
+            'user_id' => $firstUser->id,
             'name' => $this->faker->word,
             'description' => $this->faker->sentence,
         ];

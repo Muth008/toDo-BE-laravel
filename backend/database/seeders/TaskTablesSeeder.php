@@ -7,6 +7,7 @@ use App\Models\TaskCategory;
 use App\Models\TaskPriority;
 use App\Models\TaskStatus;
 use App\Models\Task;
+use App\Models\User;
 
 class TaskTablesSeeder extends Seeder
 {
@@ -15,15 +16,18 @@ class TaskTablesSeeder extends Seeder
      */
     public function run(): void
     {
+        // Get the first user
+        $firstUser = User::first();
+
         // Seed task_categories
         TaskCategory::factory()->create([
-            'user_id' => 1,
+            'user_id' => $firstUser->id,
             'name' => 'Work',
             'description' => 'Work tasks',
         ]);
 
         TaskCategory::factory()->create([
-            'user_id' => 1,
+            'user_id' => $firstUser->id,
             'name' => 'Personal',
             'description' => 'Personal tasks',
         ]);
