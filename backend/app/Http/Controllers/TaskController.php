@@ -8,6 +8,7 @@ use App\Http\Requests\Task\TaskIndexRequest;
 use App\Http\Requests\Task\TaskUpdateRequest;
 use App\Http\Resources\TaskResource;
 use App\Interfaces\TaskRepositoryInterface;
+use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -37,9 +38,15 @@ class TaskController extends Controller
 
     private TaskRepositoryInterface $taskRepositoryInterface;
 
-    public function __construct(TaskRepositoryInterface $taskRepositoryInterface)
+    private TaskService $taskService;
+
+    public function __construct(
+        TaskRepositoryInterface $taskRepositoryInterface,
+        TaskService $taskService
+        )
     {
         $this->taskRepositoryInterface = $taskRepositoryInterface;
+        $this->taskService = $taskService;
     }
 
     /**
@@ -84,7 +91,7 @@ class TaskController extends Controller
         // get only the tasks that belong to the authenticated user
         $filters['user_id'] = auth()->id();
 
-        $paginationData = $this->getPaginationData($request, $filters);
+        $paginationData = $this->taskService->getPaginationData($request, $filters);
 
         return $this->sendResponse($paginationData);
     }
@@ -250,21 +257,5 @@ class TaskController extends Controller
             'Task deleted successfully.',
             204
         );
-    }
-
-    private function getPaginationData(TaskIndexRequest $request, array $filters): array
-    {
-        $perPage = $request->query('per_page', env('TASKS_PER_PAGE', 10));
-        $page = $request->query('page', 1);
-
-        $tasks = $this->taskRepositoryInterface->index($filters, $perPage, $page);
-        $totalTasks = $this->taskRepositoryInterface->count($filters);
-        $totalPages = ceil($totalTasks / $perPage);
-
-        return [
-            'tasks' => TaskResource::collection($tasks),
-            'total_tasks' => $totalTasks,
-            'total_pages' => $totalPages,
-        ];
     }
 }
